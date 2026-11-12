@@ -274,6 +274,13 @@
   overflow-wrap: anywhere;
 }
 
+.entry-title {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .details-toggle {
   display: inline-flex;
   flex: none;

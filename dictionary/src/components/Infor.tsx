@@ -29,29 +29,31 @@ function Info({ res, bookmarks, pendingWords, onToggleBookmark, collapsible = fa
                 return (
                     <section className="dictionary-entry" key={`${entry.word}-${index}`}>
                         <div className="entry-heading">
-                            <h2>{entry.word}</h2>
-                            {collapsible && (
-                                <button
-                                    className={`details-toggle ${isExpanded ? "is-expanded" : ""}`}
-                                    type="button"
-                                    aria-label={`${isExpanded ? "Hide" : "Show"} details for ${entry.word}`}
-                                    aria-expanded={isExpanded}
-                                    aria-controls={entryDetailsId}
-                                    onClick={() => {
-                                        setExpandedWords((current) => {
-                                            const next = new Set(current);
-                                            if (next.has(wordKey)) {
-                                                next.delete(wordKey);
-                                            } else {
-                                                next.add(wordKey);
-                                            }
-                                            return next;
-                                        });
-                                    }}
-                                >
-                                    <IoChevronDown aria-hidden="true" />
-                                </button>
-                            )}
+                            <div className="entry-title">
+                                <h2>{entry.word}</h2>
+                                {collapsible && (
+                                    <button
+                                        className={`details-toggle ${isExpanded ? "is-expanded" : ""}`}
+                                        type="button"
+                                        aria-label={`${isExpanded ? "Hide" : "Show"} details for ${entry.word}`}
+                                        aria-expanded={isExpanded}
+                                        aria-controls={entryDetailsId}
+                                        onClick={() => {
+                                            setExpandedWords((current) => {
+                                                const next = new Set(current);
+                                                if (next.has(wordKey)) {
+                                                    next.delete(wordKey);
+                                                } else {
+                                                    next.add(wordKey);
+                                                }
+                                                return next;
+                                            });
+                                        }}
+                                    >
+                                        <IoChevronDown aria-hidden="true" />
+                                    </button>
+                                )}
+                            </div>
                             <button
                                 className={`bookmark-button ${isBookmarked ? "is-bookmarked" : ""}`}
                                 type="button"
