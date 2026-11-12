@@ -1,78 +1,36 @@
-# React + TypeScript + Vite
+# Dictionary
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Firebase bookmarks
 
-Currently, two official plugins are available:
+Bookmarks are stored in Cloud Firestore under each user's Firebase Auth ID.
+To enable them in the Firebase project:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+1. Enable **Authentication → Sign-in method → Anonymous** and **Google**.
+2. Create a Cloud Firestore database.
+3. Publish the rules from [`firestore.rules`](./firestore.rules) in the Firestore
+   Rules tab.
+4. Add the app's local and deployed domains to Firebase Authentication's
+   authorized domains.
 
-## React Compiler
+The app starts with an anonymous session so bookmarks work before login. Choose
+**Sign in with Google** to link that session to your Google account and keep its
+bookmarks. If the Google account already has an account in this app, the app
+signs into it and copies across guest bookmarks that are not already saved.
+Signing out returns to a new anonymous session.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+The Firebase web configuration is in `src/firebase.ts`. Firebase web API keys
+identify the project and should also be restricted to the app's domains in
+Google Cloud Console. Before linking a Google account, guest bookmarks are
+specific to the browser's anonymous account; clearing its site data may create
+a different account.
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+## Development
 
-## Expanding the ESLint configuration
+Install dependencies and start the Vite development server:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+Build the app with `npm run build`.

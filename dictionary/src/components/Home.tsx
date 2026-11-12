@@ -1,12 +1,20 @@
 import { useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router";
-import { fetchData } from "./api";
+import { fetchData, type DictionaryEntry } from "./api";
 import Info from "./Infor";
 
-function Home() {
+type HomeProps = {
+    bookmarks: Set<string>;
+    pendingWords: Set<string>;
+    error: string | null;
+    onToggleBookmark: (entry: DictionaryEntry) => Promise<void>;
+};
+
+function Home({ bookmarks, pendingWords, error, onToggleBookmark }: HomeProps) {
     const [searchParams, setSearchParams] = useSearchParams();
     const [inp, setInp] = useState<string>(searchParams.get("word") ?? "");
-    const [result, setResult] = useState<any[]>([]);
+    const [result, setResult] = useState<DictionaryEntry[]>([]);
+    const [searching, setSearching] = useState(false);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -18,8 +26,13 @@ function Home() {
         }
 
         setSearchParams({ word });
-        const response = await fetchData(word);
-        setResult(response);
+        setSearching(true);
+        try {
+            const response = await fetchData(word);
+            setResult(response);
+        } finally {
+            setSearching(false);
+        }
     };
 
     return (
@@ -41,12 +54,26 @@ function Home() {
                         placeholder="Type a word..."
                         aria-label="Search word"
                     />
-                    <button className="search-button" type="submit">Search</button>
+                    <button className="search-button" type="submit" disabled={searching}>
+                        {searching ? "Searching..." : "Search"}
+                    </button>
                 </form>
             </section>
 
             <section className="results">
-                {result.length > 0 ? <Info res={result} /> : <div className="empty-state">Search for a word to see definitions.</div>}
+                {error && <div className="error-state" role="alert">{error}</div>}
+                {result.length > 0 ? (
+                    <Info
+                        res={result}
+                        bookmarks={bookmarks}
+                        pendingWords={pendingWords}
+                        onToggleBookmark={onToggleBookmark}
+                    />
+                ) : (
+                    <div className="empty-state">
+                        {searching ? "Looking up your word..." : "Search for a word to see definitions."}
+                    </div>
+                )}
             </section>
         </main>
     );

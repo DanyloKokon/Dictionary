@@ -5,11 +5,86 @@
   align-items: center;
   justify-content: center;
   gap: 2rem;
-  padding: 3rem 1.25rem;
+  padding: 6rem 1.25rem 3rem;
   background:
     radial-gradient(circle at top left, rgba(137, 149, 255, 0.18), transparent 32%),
     radial-gradient(circle at bottom right, rgba(95, 193, 255, 0.2), transparent 28%),
     linear-gradient(135deg, #f6f8ff 0%, #edf4ff 35%, #f9f7ff 100%);
+}
+
+.app-nav {
+  position: absolute;
+  z-index: 2;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1040px, calc(100% - 2.5rem));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(127, 141, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 8px 24px rgba(80, 90, 155, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.app-nav a {
+  color: #38415b;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.app-nav a:hover {
+  color: #5868eb;
+}
+
+.app-brand {
+  letter-spacing: -0.02em;
+}
+
+.app-nav-links {
+  display: flex;
+  flex: none;
+  gap: 1.25rem;
+}
+
+.auth-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.account-label {
+  overflow: hidden;
+  max-width: 13rem;
+  color: #59637a;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-button {
+  flex: none;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(93, 106, 232, 0.25);
+  border-radius: 10px;
+  background: #fff;
+  color: #4d5ad0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-button:hover:not(:disabled) {
+  background: #f3f5ff;
+}
+
+.auth-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .search-panel {
@@ -104,6 +179,12 @@
   transform: translateY(0);
 }
 
+.search-button:disabled,
+.bookmark-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .results {
   width: min(820px, 100%);
 }
@@ -119,6 +200,53 @@
   box-shadow: 0 10px 25px rgba(49, 56, 90, 0.06);
 }
 
+.error-state {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(190, 58, 71, 0.2);
+  border-radius: 14px;
+  background: #fff3f3;
+  color: #9c2635;
+}
+
+.bookmark-panel {
+  width: min(820px, 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.8rem 2rem;
+  border: 1px solid rgba(127, 141, 255, 0.18);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 35px rgba(27, 32, 57, 0.08);
+}
+
+.bookmark-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #5d6ae8;
+}
+
+.bookmark-title > svg {
+  flex: none;
+  width: 2.3rem;
+  height: 2.3rem;
+}
+
+.bookmark-panel h1 {
+  color: #1a2035;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.bookmark-count {
+  color: #59637a;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .dictionary-entry {
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(127, 141, 255, 0.16);
@@ -128,11 +256,54 @@
   box-shadow: 0 18px 35px rgba(27, 32, 57, 0.08);
 }
 
+.entry-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .dictionary-entry h2 {
   margin: 0 0 1rem;
   font-size: clamp(1.9rem, 3vw, 2.7rem);
   letter-spacing: -0.04em;
   color: #171d2e;
+}
+
+.entry-heading h2 {
+  overflow-wrap: anywhere;
+}
+
+.bookmark-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(93, 106, 232, 0.25);
+  border-radius: 12px;
+  background: #fff;
+  color: #4d5ad0;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.bookmark-button:hover {
+  transform: translateY(-1px);
+  background: #f3f5ff;
+}
+
+.bookmark-button.is-bookmarked {
+  border-color: rgba(93, 106, 232, 0.35);
+  background: #eef0ff;
+}
+
+.bookmark-button svg {
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .meaning-block {
@@ -187,7 +358,32 @@
 
 @media (max-width: 640px) {
   .dictionary-page {
-    padding: 2rem 0.9rem;
+    padding: 6rem 0.9rem 2rem;
+  }
+
+  .app-nav {
+    top: 0.8rem;
+    width: calc(100% - 1.8rem);
+    gap: 0.75rem;
+    padding: 0.7rem 0.75rem;
+  }
+
+  .app-nav-links {
+    gap: 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  .auth-controls {
+    gap: 0.4rem;
+  }
+
+  .auth-button {
+    padding: 0.5rem 0.55rem;
+    font-size: 0.8rem;
+  }
+
+  .account-label {
+    display: none;
   }
 
   .search-panel {
@@ -204,5 +400,20 @@
 
   .dictionary-entry {
     padding: 1.2rem 1rem;
+  }
+
+  .bookmark-panel {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 1.4rem 1.15rem;
+  }
+
+  .entry-heading {
+    align-items: flex-start;
+  }
+
+  .bookmark-button {
+    padding: 0.55rem 0.65rem;
+    font-size: 0.88rem;
   }
 }
