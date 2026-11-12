@@ -274,6 +274,44 @@
   overflow-wrap: anywhere;
 }
 
+.details-toggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(93, 106, 232, 0.25);
+  border-radius: 12px;
+  background: #fff;
+  color: #4d5ad0;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.details-toggle:hover {
+  background: #f3f5ff;
+}
+
+.details-toggle svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+.details-toggle.is-expanded svg {
+  transform: rotate(180deg);
+}
+
+.entry-details {
+  display: none;
+}
+
+.entry-details.is-visible {
+  display: block;
+}
+
 .bookmark-button {
   display: inline-flex;
   flex: none;

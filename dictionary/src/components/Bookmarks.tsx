@@ -39,6 +39,7 @@ function Bookmarks({ entries, loading, pendingWords, error, onToggleBookmark }: 
             bookmarks={savedWords}
             pendingWords={pendingWords}
             onToggleBookmark={onToggleBookmark}
+            collapsible
           />
         ) : (
           <div className="empty-state">No bookmarked words yet. Search for a word and save it here.</div>

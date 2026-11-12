@@ -32,6 +32,7 @@ function Home({ bookmarks, pendingWords, error, onToggleBookmark }: HomeProps) {
             setResult(response);
         } finally {
             setSearching(false);
+            setInp('')
         }
     };
 
