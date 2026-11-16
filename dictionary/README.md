@@ -18,6 +18,10 @@ bookmarks. If the Google account already has an account in this app, the app
 signs into it and copies across guest bookmarks that are not already saved.
 Signing out returns to a new anonymous session.
 
+Bookmarks can be assigned to categories from the Bookmarks page. Existing
+bookmarks without a category appear under **Uncategorized**. Select a category
+to filter the list, or add a new category alongside a bookmark.
+
 The Firebase web configuration is in `src/firebase.ts`. Firebase web API keys
 identify the project and should also be restricted to the app's domains in
 Google Cloud Console. Before linking a Google account, guest bookmarks are

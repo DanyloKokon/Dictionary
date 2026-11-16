@@ -52,7 +52,7 @@ function App() {
   const [authBusy, setAuthBusy] = useState(false);
   const signInStarted = useRef(false);
   const userId = user?.uid ?? null;
-  const { bookmarks, loading, error, toggleBookmark, pendingWords } = useBookmarks(userId);
+  const { bookmarks, loading, error, toggleBookmark, setBookmarkCategory, pendingWords } = useBookmarks(userId);
 
   useEffect(() => onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -192,6 +192,7 @@ function App() {
               pendingWords={pendingWords}
               error={appError}
               onToggleBookmark={toggleBookmark}
+              onSetCategory={setBookmarkCategory}
             />
           }
         />

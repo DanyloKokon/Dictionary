@@ -6,6 +6,7 @@ import {
   onSnapshot,
   serverTimestamp,
   setDoc,
+  updateDoc,
   type Timestamp,
 } from "firebase/firestore";
 import type { DictionaryEntry } from "../components/api";
@@ -13,6 +14,7 @@ import { db } from "../firebase";
 
 export type BookmarkedEntry = DictionaryEntry & {
   id: string;
+  category?: string;
   savedAt?: Timestamp | null;
 };
 
@@ -22,6 +24,7 @@ type UseBookmarksResult = {
   error: string | null;
   pendingWords: Set<string>;
   toggleBookmark: (entry: DictionaryEntry) => Promise<void>;
+  setBookmarkCategory: (word: string, category: string) => Promise<void>;
 };
 
 const wordKey = (word: string) => word.trim().toLowerCase();
@@ -72,6 +75,7 @@ export function useBookmarks(userId: string | null): UseBookmarksResult {
         await setDoc(bookmarkRef, {
           word: entry.word,
           meanings: entry.meanings ?? [],
+          category: "Uncategorized",
           savedAt: serverTimestamp(),
         });
       }
@@ -87,11 +91,37 @@ export function useBookmarks(userId: string | null): UseBookmarksResult {
     }
   }, [bookmarks, userId]);
 
+  const setBookmarkCategory = useCallback(async (word: string, category: string) => {
+    if (!userId) {
+      setError("Bookmarks are unavailable until Firebase sign-in completes.");
+      return;
+    }
+
+    const key = wordKey(word);
+    setPendingWords((current) => new Set(current).add(key));
+    setError(null);
+
+    try {
+      const bookmarkRef = doc(db, "users", userId, "bookmarks", encodeURIComponent(key));
+      await updateDoc(bookmarkRef, { category });
+    } catch (cause) {
+      console.error("Could not update bookmark category in Firebase.", cause);
+      setError("Could not update the bookmark category. Please try again.");
+    } finally {
+      setPendingWords((current) => {
+        const next = new Set(current);
+        next.delete(key);
+        return next;
+      });
+    }
+  }, [userId]);
+
   return {
     bookmarks: userId === initializedUserId ? bookmarks : [],
     loading: Boolean(userId && userId !== initializedUserId),
     error,
     pendingWords,
     toggleBookmark,
+    setBookmarkCategory,
   };
 }

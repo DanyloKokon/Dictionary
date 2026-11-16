@@ -6,10 +6,11 @@ service cloud.firestore {
       allow read, delete: if request.auth != null && request.auth.uid == userId;
       allow create, update: if request.auth != null
         && request.auth.uid == userId
-        && request.resource.data.keys().hasOnly(['word', 'meanings', 'savedAt'])
+        && request.resource.data.keys().hasOnly(['word', 'meanings', 'savedAt', 'category'])
         && request.resource.data.word is string
         && request.resource.data.meanings is list
-        && request.resource.data.savedAt is timestamp;
+        && request.resource.data.savedAt is timestamp
+        && (!('category' in request.resource.data) || request.resource.data.category is string);
     }
   }
 }
