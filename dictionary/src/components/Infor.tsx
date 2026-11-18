@@ -11,6 +11,7 @@ type InfoProps = {
     categoryForWord?: (word: string) => string;
     onSetCategory?: (word: string, category: string) => Promise<void>;
     collapsible?: boolean;
+    className?: string;
 };
 
 function CategoryControl({
@@ -73,6 +74,7 @@ function Info({
     categoryForWord,
     onSetCategory,
     collapsible = false,
+    className,
 }: InfoProps) {
     const [expandedWords, setExpandedWords] = useState<Set<string>>(new Set());
     const detailsId = useId();
@@ -82,7 +84,7 @@ function Info({
     }
 
     return (
-        <div>
+        <div className={className}>
             {res.map((entry, index) => {
                 const wordKey = entry.word.toLowerCase();
                 const isBookmarked = bookmarks.has(wordKey);

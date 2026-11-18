@@ -1,4 +1,4 @@
-import { IoBookmarksOutline } from "react-icons/io5";
+import { IoBookmarksOutline, IoGridOutline, IoListOutline } from "react-icons/io5";
 import { useState } from "react";
 import type { DictionaryEntry } from "./api";
 import type { BookmarkedEntry } from "../hooks/useBookmarks";
@@ -22,6 +22,7 @@ function Bookmarks({
   onSetCategory,
 }: BookmarksProps) {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const savedWords = new Set(entries.map((entry) => entry.word.toLowerCase()));
   const categories = [...new Set(entries.map((entry) => entry.category?.trim() || "Uncategorized"))]
     .sort((a, b) => a.localeCompare(b));
@@ -53,24 +54,49 @@ function Bookmarks({
           <div className="empty-state">Loading your bookmarks...</div>
         ) : entries.length ? (
           <>
-            <div className="bookmark-categories" aria-label="Filter bookmarks by category">
-              {["All", ...categories].map((category) => (
+            <div className="bookmark-toolbar">
+              <div className="bookmark-categories" aria-label="Filter bookmarks by category">
+                {["All", ...categories].map((category) => (
+                  <button
+                    className={selectedCategory === category ? "is-active" : ""}
+                    type="button"
+                    key={category}
+                    aria-pressed={selectedCategory === category}
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {category}
+                    {category === "All" && <span>{entries.length}</span>}
+                    {category !== "All" && (
+                      <span>{entries.filter((entry) => (entry.category?.trim() || "Uncategorized") === category).length}</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+              <div className="bookmark-view-toggle" role="group" aria-label="Bookmark layout">
                 <button
-                  className={selectedCategory === category ? "is-active" : ""}
                   type="button"
-                  key={category}
-                  aria-pressed={selectedCategory === category}
-                  onClick={() => setActiveCategory(category)}
+                  className={viewMode === "list" ? "is-active" : ""}
+                  aria-label="List view"
+                  aria-pressed={viewMode === "list"}
+                  onClick={() => setViewMode("list")}
                 >
-                  {category}
-                  {category === "All" && <span>{entries.length}</span>}
-                  {category !== "All" && (
-                    <span>{entries.filter((entry) => (entry.category?.trim() || "Uncategorized") === category).length}</span>
-                  )}
+                  <IoListOutline aria-hidden="true" />
+                  <span>List</span>
                 </button>
-              ))}
+                <button
+                  type="button"
+                  className={viewMode === "grid" ? "is-active" : ""}
+                  aria-label="Grid view"
+                  aria-pressed={viewMode === "grid"}
+                  onClick={() => setViewMode("grid")}
+                >
+                  <IoGridOutline aria-hidden="true" />
+                  <span>Grid</span>
+                </button>
+              </div>
             </div>
             <Info
+              className={`bookmark-entries is-${viewMode}`}
               res={visibleEntries}
               bookmarks={savedWords}
               pendingWords={pendingWords}
